@@ -1,0 +1,297 @@
+<br-title [title]="title"> </br-title>
+
+<div class="row">
+  <div class="col-md-12 mb-12">
+    <ng-wizard *ngIf="procuracao" [config]="getNgWizardConfig()">
+      <ng-wizard-step [title]="'1'" [description]="getDescricaoStep1Wizard()">
+        <div class="row" style="margin-top: 20px;">
+          <div class="col-md-10" style="margin-left: 105px;">
+            <form [formGroup]="form">
+              <div class="row mb-1" *ngIf="isAcaoSubstabelecer()">
+                <div class="col-md-12 br-input">
+                  <label class="titular"
+                    >Titular (Outorgante da Procuração)</label
+                  >
+                  <span
+                    >{{ procuracao.niProcuracaoRaiz | cpfCnpj }} -
+                    {{ procuracao.nomeProcuracaoRaiz }}</span
+                  >
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="br-input">
+                    <label>Tipo</label>
+                  </div>
+                  <div
+                    class="br-check"
+                    style="display: inline-flex; margin-top: 0.4em;"
+                  >
+                    <input
+                      type="radio"
+                      id="rd-pf-ni"
+                      name="tipoNiOutorgado"
+                      value="CPF"
+                      formControlName="tipoNiOutorgado"
+                    />
+                    <label for="rd-pf-ni">CPF</label>
+                    <input
+                      type="radio"
+                      id="rd-pj-ni"
+                      name="tipoNiOutorgado"
+                      value="CNPJ"
+                      formControlName="tipoNiOutorgado"
+                    />
+                    <label for="rd-pj-ni">CNPJ</label>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <br-input
+                    [label]="getLabelNiOutorgado()"
+                    [required]="true"
+                    [mask]="getMaskNiOutorgado()"
+                    (unmask)="onBlur('niOutorgado')"
+                    formControlName="niOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-7">
+                  <br-input
+                    label="Nome"
+                    [required]="true"
+                    maxlength="100"
+                    (unmask)="onBlur('nomeOutorgado')"
+                    formControlName="nomeOutorgado"
+                  >
+                  </br-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <br-input
+                    label="CEP"
+                    [required]="true"
+                    [procMask]="getCepMask()"
+                    (unmask)="onBlur('cepOutorgado')"
+                    formControlName="cepOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-8">
+                  <br-input
+                    label="Logradouro"
+                    [required]="true"
+                    maxlength="100"
+                    formControlName="logradouroOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-2">
+                  <br-input
+                    label="Número"
+                    [required]="true"
+                    [procMask]="getNumeroMask()"
+                    formControlName="numeroOutorgado"
+                  >
+                  </br-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3">
+                  <br-input
+                    label="Complemento"
+                    maxlength="50"
+                    formControlName="complementoOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-3">
+                  <br-input
+                    label="Bairro"
+                    maxlength="50"
+                    formControlName="bairroOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-2">
+                  <br-input
+                    label="UF"
+                    [required]="true"
+                    [procMask]="getUfMask()"
+                    (unmask)="onBlur('ufOutorgado')"
+                    formControlName="ufOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-4">
+                  <br-input
+                    label="Município"
+                    [required]="true"
+                    maxlength="50"
+                    formControlName="municipioOutorgado"
+                  >
+                  </br-input>
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  class="col-md-3"
+                  *ngIf="get('tipoNiOutorgado').value == 'CPF'"
+                >
+                  <br-input
+                    label="Profissão/Qualificação"
+                    [required]="true"
+                    maxlength="30"
+                    formControlName="qualificacaoOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div
+                  class="col-md-3"
+                  *ngIf="get('tipoNiOutorgado').value == 'CNPJ'"
+                >
+                  <br-input
+                    label="CPF Responsável Legal"
+                    [required]="true"
+                    mask="999.999.999-99"
+                    (unmask)="onBlur('cpfRepresOutorgado')"
+                    formControlName="cpfRepresOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div
+                  class="col-md-5"
+                  *ngIf="get('tipoNiOutorgado').value == 'CNPJ'"
+                >
+                  <br-input
+                    label="Nome Responsável Legal"
+                    [required]="true"
+                    maxlength="100"
+                    formControlName="nomeRepresOutorgado"
+                  >
+                  </br-input>
+                </div>
+                <div class="col-md-4">
+                  <br-input
+                    label="E-mail"
+                    type="email"
+                    (unmask)="onBlur('emailOutorgado')"
+                    formControlName="emailOutorgado"
+                    maxlength="50"
+                  >
+                  </br-input>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <label style="font-weight: bold;">Período de Vigência</label>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <caption class="classDtInicio">
+                        Início
+                      </caption>
+                      <label>{{ dataIniVigencia | date: 'dd/MM/yyy' }}</label>
+                    </div>
+                    <div class="col-md-1" style="padding-top: 35px;">a</div>
+                    <div class="col-md-7">
+                      <br-date-picker
+                        label="Fim"
+                        [required]="false"
+                        [outsideClick]="true"
+                        [brMinDate]="dataIniVigencia"
+                        [brMaxDate]="getDtLimiteVigencia()"
+                        formControlName="dataFimVigencia"
+                      >
+                      </br-date-picker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="informativo mb-2">
+                <small>{{ getInformativoDtLimiteVigencia() }}</small>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-6 br-check">
+                  <input
+                    type="checkbox"
+                    id="inSubstabelecer"
+                    formControlName="inSubstabelecer"
+                  />
+                  <label for="inSubstabelecer">
+                    Permitir substabelecimento
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </ng-wizard-step>
+
+      <ng-wizard-step [title]="'2'" description="Serviços">
+        <app-selecionar-servicos-procuracao
+          #selecionarServicos
+          [procuracao]="procuracao"
+        >
+        </app-selecionar-servicos-procuracao>
+      </ng-wizard-step>
+
+      <ng-wizard-step [title]="'3'" description="Gerar Procuração">
+        <textarea id="hash_value" class="form-control" hidden rows="5">
+        </textarea>
+        <div style="margin-top: 20px;">
+          <app-loading-text
+            text="Aguarde, esperando resposta do Assinador SERPRO"
+            *ngIf="esperandoRespostaAssinadorSerpro"
+          >
+          </app-loading-text>
+        </div>
+        <embed
+          *ngIf="Content"
+          [src]="Content"
+          style="width: 1200px; height: 500px;"
+          type="application/pdf"
+        />
+      </ng-wizard-step>
+    </ng-wizard>
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-md-6 text-left">
+    <button
+      type="button"
+      [disabled]="!isVoltarVisible()"
+      (click)="onShowPreviousStep()"
+      [style.color]="isVoltarVisible() ? '#1351b4' : '#888888'"
+      style="border:none; background:#FFFFFF; "
+      class="br-button is-secondary"
+    >
+      Voltar
+    </button>
+  </div>
+  <div class="col-md-6 text-right">
+    <button
+      type="button"
+      (mousedown)="onCancelDown()"
+      class="br-button is-secondary"
+    >
+      Cancelar
+    </button>
+    <button
+      type="button"
+      (click)="onShowNextStep()"
+      [disabled]="isAvancarAssinarDisabled() || this.form.invalid"
+      class="br-button is-primary"
+    >
+      {{ getLabelAvancarAssinar() }}
+    </button>
+    <button
+      type="button"
+      *ngIf="isSalvarAssinarVisible()"
+      [disabled]="esperandoRespostaAssinadorSerpro"
+      (click)="onSalvarAssinar()"
+      class="br-button is-primary"
+    >
+      Salvar e Assinar
+    </button>
+  </div>
+</div>
